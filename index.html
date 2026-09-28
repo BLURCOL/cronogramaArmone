@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cronograma · Armoné By Silvia Fonnegra · BLÜR Collective</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#ffffff; --text:#111111; --muted:#888888; --muted2:#6a6a6a; --border:#e5e5e5; --surface:#f7f7f7;
+  --orange:#E8520A; --orange-light:#FF7A35; --orange-bg:#FFF0EA;
+  --blue:#3B72FF; --blue-bg:#EEF3FF; --green:#1DBF73; --green-bg:#E8FBF3; --purple:#6C44E0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:"Albert Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;position:relative;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:left}
+button:focus-visible{outline:2px solid var(--orange);outline-offset:2px;border-radius:6px}
+
+.blob-container{position:fixed;pointer-events:none;z-index:0}
+.blob-tr{top:-120px;right:-120px;width:480px;height:480px}
+.blob-br{bottom:-80px;right:-80px;width:380px;height:380px}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+.blob-tr .b1{width:300px;height:300px;background:radial-gradient(circle,#FF6B2B,#E8400A);top:80px;right:60px}
+.blob-tr .b2{width:220px;height:220px;background:radial-gradient(circle,#4A8AFF,#2B5CE8);top:220px;right:180px;opacity:.5}
+.blob-tr .b3{width:160px;height:160px;background:radial-gradient(circle,#7B54E0,#5530CC);top:260px;right:100px;opacity:.45}
+.blob-br .b1{width:240px;height:240px;background:radial-gradient(circle,#7B54E0,#5530CC);bottom:60px;right:40px}
+.blob-br .b2{width:180px;height:180px;background:radial-gradient(circle,#FF6B2B,#E8400A);bottom:160px;right:150px;opacity:.5}
+
+.wrapper{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 40px 120px}
+.site-header{display:flex;justify-content:space-between;align-items:center;padding:32px 0 28px;border-bottom:1px solid var(--border);gap:12px}
+.logo{display:flex;flex-direction:column;line-height:1}
+.logo b{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.logo span{font-size:7.5px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);margin-top:3px;padding-left:1px}
+.doc-tag{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:right}
+
+.cover{padding:88px 0 60px;border-bottom:1px solid var(--border)}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);margin-bottom:28px}
+.cover h1{font-size:clamp(40px,6vw,66px);font-weight:800;line-height:1.04;letter-spacing:-.03em;max-width:760px;margin-bottom:30px;text-wrap:balance}
+.cover h1 em{font-style:normal;color:var(--orange)}
+.subtitle{font-size:18px;color:var(--muted2);max-width:560px;line-height:1.6;margin-bottom:44px}
+.cover-meta{display:flex;flex-wrap:wrap;gap:22px 44px;padding-top:36px;border-top:1px solid var(--border)}
+.cover-meta label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.cover-meta span{font-size:15px;font-weight:600}
+.cover-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.countdown{display:inline-flex;align-items:center;gap:10px;background:#111;color:#fff;border-radius:999px;padding:9px 18px 9px 10px;font-size:14px;font-weight:500}
+.countdown b{background:var(--orange);border-radius:999px;padding:4px 11px;font-weight:800;font-size:15px}
+.goto{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:9px 18px;font-size:14px;font-weight:600;background:var(--bg)}
+.goto:hover{border-color:var(--text)}
+
+/* Fases resumen */
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin:56px 0 0}
+.ph{background:var(--bg);padding:24px 22px;display:flex;flex-direction:column;gap:6px}
+.ph:hover{background:#fcfcfc}
+.phase-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px;display:inline-block;align-self:flex-start;margin-bottom:8px}
+.tag-orange{background:var(--orange-bg);color:var(--orange)}
+.tag-blue{background:var(--blue-bg);color:var(--blue)}
+.tag-green{background:var(--green-bg);color:var(--green)}
+.ph h3{font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.ph p{font-size:12.5px;color:var(--muted);font-weight:500}
+.ph .go{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}
+
+/* Barra de filtros */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);margin:0 -40px;padding:12px 40px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;background:var(--surface);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{font-size:13px;font-weight:600;padding:7px 12px;border-radius:8px;color:var(--muted2)}
+.seg button[aria-pressed="true"]{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.jump{display:flex;gap:6px;flex-wrap:wrap}
+.jump button{font-size:12px;font-weight:700;letter-spacing:.04em;padding:7px 12px;border-radius:999px;border:1px solid var(--border);background:var(--bg)}
+.jump button:hover{border-color:var(--text)}
+.jump button.on{background:#111;color:#fff;border-color:#111}
+
+/* Timeline */
+.tl{padding-top:24px}
+.month{padding-top:44px}
+.month-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.month-h h2{font-size:clamp(28px,4vw,38px);font-weight:800;letter-spacing:-.025em;line-height:1.05}
+.month-h h2 em{font-style:italic;font-weight:300;color:var(--muted)}
+.month-h .phase-tag{margin:0}
+.phase-intro{font-size:15px;color:var(--muted2);line-height:1.6;max-width:600px;margin:6px 0 10px}
+.ongoing{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.ongoing span{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:8px;background:var(--surface);display:inline-flex;gap:8px;align-items:center}
+.ongoing i{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+.week{position:relative;display:grid;grid-template-columns:132px 1fr;gap:0 26px;padding-top:26px}
+.week::before{content:"";position:absolute;left:132px;margin-left:13px;top:0;bottom:-26px;width:2px;background:var(--border)}
+.month .week:last-child::before{bottom:0}
+.wk-h{padding-top:4px;text-align:right}
+.wk-h b{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.wk-h span{display:block;font-size:14px;font-weight:700;margin-top:4px}
+.wk-h .fest{display:inline-block;margin-top:8px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);background:var(--orange-bg);padding:3px 8px;border-radius:10px}
+.week.now .wk-h b{color:var(--orange)}
+.wk-body{position:relative;padding-left:26px;display:flex;flex-direction:column;gap:10px}
+.wk-body::before{content:"";position:absolute;left:-7px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid #cfcfcf;z-index:1}
+.week.now .wk-body::before{border-color:var(--orange);background:var(--orange);box-shadow:0 0 0 5px var(--orange-bg)}
+.now-flag{align-self:flex-start;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--orange);padding:4px 10px;border-radius:20px;margin-bottom:2px}
+
+.card{border:1px solid var(--border);border-radius:14px;background:var(--bg);overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.card:hover{border-color:#cfcfcf}
+.card.open{box-shadow:0 8px 28px rgba(0,0,0,.07);border-color:#cfcfcf}
+.c-top{display:grid;grid-template-columns:58px 1fr auto;gap:14px;align-items:center;padding:14px 16px;width:100%}
+.c-date{text-align:center;line-height:1}
+.c-date small{display:block;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.c-date b{font-size:24px;font-weight:800;letter-spacing:-.03em}
+.c-date i{display:block;font-style:normal;font-size:10.5px;font-weight:600;color:var(--muted);margin-top:4px}
+.c-main{min-width:0}
+.c-kicker{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:5px}
+.c-fr{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.c-who{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--surface);color:var(--muted2)}
+.c-who.armone{background:#111;color:#fff}
+.c-name{font-size:15.5px;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+.c-range{font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:500}
+.c-chev{width:28px;height:28px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:12px;color:var(--muted2);transition:transform .2s}
+.card.open .c-chev{transform:rotate(180deg)}
+.c-detail{padding:0 16px 18px 88px;display:grid;gap:14px}
+.c-detail p{font-size:14px;color:#444;line-height:1.65;max-width:560px}
+.c-detail h4{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);margin-bottom:5px}
+.c-chips{display:flex;flex-wrap:wrap;gap:6px}
+.c-chips button{font-size:12.5px;font-weight:600;padding:6px 10px;background:var(--surface);border-radius:8px}
+.c-chips button:hover{color:var(--orange)}
+
+.card.hito .c-name{font-size:17px}
+.card.armone{background:#FCFCFC;border-style:dashed}
+.card.big{background:#111;color:#fff;border:0}
+.card.big .c-date small,.card.big .c-date i,.card.big .c-range{color:rgba(255,255,255,.55)}
+.card.big .c-date b{color:var(--orange-light)}
+.card.big .c-name{font-size:22px;font-weight:800}
+.card.big .c-who{background:rgba(255,255,255,.12);color:#fff}
+.card.big .c-chev{background:rgba(255,255,255,.12);color:#fff}
+.card.big .c-detail p{color:rgba(255,255,255,.7)}
+.card.big .c-chips button{background:rgba(255,255,255,.1);color:#fff}
+.card.flash{animation:flash 1.2s ease}
+@keyframes flash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px var(--orange-bg),0 0 0 5px var(--orange)}}
+
+.empty{font-size:13px;color:var(--muted);padding:8px 0}
+
+/* Cierre */
+.section{padding:80px 0 0}
+.section-label{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin-bottom:16px}
+.section-title{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.025em;line-height:1.08;margin-bottom:12px}
+.section-title em{font-style:italic;font-weight:300;color:var(--muted)}
+.section-intro{font-size:16px;color:var(--muted2);line-height:1.65;max-width:600px;margin-bottom:36px}
+.cycle{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.cy{background:var(--bg);padding:24px 20px}
+.cy .num{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--orange);margin-bottom:12px}
+.cy h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.cy p{font-size:13px;color:var(--muted2);line-height:1.55}
+.alcance-full{background:var(--surface);border-radius:16px;padding:30px 32px}
+.alcance-items{display:flex;flex-wrap:wrap;gap:10px}
+.alcance-item{display:flex;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;font-weight:500}
+.alcance-item .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);flex-shrink:0}
+.alcance-item small{color:var(--muted);font-size:12px;font-weight:700}
+.slp-box{background:#111;color:#fff;border-radius:16px;padding:34px 38px;margin-top:16px}
+.slp-label{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-light);margin-bottom:14px}
+.slp-box h3{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px;line-height:1.1}
+.slp-box p{font-size:14px;line-height:1.7;color:rgba(255,255,255,.62);max-width:640px}
+.slp-box p strong{color:#fff}
+.site-footer{margin-top:80px;padding:40px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px}
+.site-footer .logo{opacity:.35}
+.site-footer p{font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+
+
+/* Vista Gantt */
+.bar-l{display:flex;flex-wrap:wrap;gap:10px}
+.seg.view button[aria-pressed="true"]{background:#111;color:#fff}
+.gv{--W:min(1240px,calc(100vw - 40px));width:var(--W);margin-left:calc((100% - var(--W))/2);padding-top:36px}
+.gv-head{max-width:900px;margin:0 auto 18px;padding:0}
+.gv-head h2{font-size:clamp(28px,4vw,38px);font-weight:800;letter-spacing:-.025em;line-height:1.05;margin:8px 0 6px}
+.gv-head h2 em{font-style:italic;font-weight:300;color:var(--muted)}
+.gv-head p{font-size:15px;color:var(--muted2);line-height:1.6;max-width:600px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--muted2);margin:0 0 14px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.lg-bar{width:20px;height:9px;border-radius:3px;display:inline-block}
+.lg-armone{background:repeating-linear-gradient(135deg,#bbb 0 3px,transparent 3px 6px);outline:1.5px solid #999;outline-offset:-1.5px}
+.lg-dia{width:10px;height:10px;transform:rotate(45deg);background:#111;border-radius:1px;display:inline-block}
+.lg-hol{width:14px;height:12px;background:#FBE9E0;border-radius:2px;display:inline-block}
+.g-shell{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--bg)}
+.g-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.gantt{position:relative;min-width:960px}
+.g-row{display:grid;grid-template-columns:280px 1fr;min-height:38px;border-top:1px solid #f0f0f0}
+.g-head{border-top:0;min-height:54px}
+.g-lab{position:sticky;left:0;z-index:3;background:var(--bg);border-right:1px solid var(--border);padding:7px 14px 7px 18px;display:flex;flex-direction:column;justify-content:center;gap:1px;text-align:left;width:100%}
+.g-head .g-lab{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+button.g-lab:hover .gl-n{color:var(--orange)}
+.gl-n{font-size:13px;font-weight:600;line-height:1.3}
+.gl-d{font-size:11.5px;color:var(--muted)}
+.gl-d i{font-style:normal;font-weight:700;color:var(--muted2)}
+.g-group .g-lab{background:var(--surface);flex-direction:row;align-items:center;justify-content:flex-start;gap:10px}
+.g-group .g-trk{background:var(--surface)}
+.g-group .gl-n{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.g-group .cnt{font-size:11px;color:var(--muted);font-weight:600}
+.g-group .chev{margin-left:auto;font-size:12px;color:var(--muted);transition:transform .15s}
+.g-group[data-closed="1"] .chev{transform:rotate(-90deg)}
+.g-trk{position:relative}
+.bgc{position:absolute;top:0;bottom:0;pointer-events:none}
+.bgc.we{background:#FAFAFA}
+.bgc.hol{background:#FBE9E0}
+.bgc.wl{border-left:1px solid #F0F0F0}
+.bgc.ml{border-left:1px solid #DADADA}
+.bgc.today{border-left:2px solid var(--orange);z-index:2}
+.tick{position:absolute;bottom:6px;font-size:11px;color:var(--muted);padding-left:5px;white-space:nowrap;font-weight:500}
+.tick.m{top:8px;bottom:auto;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text)}
+.today-tag{position:absolute;top:6px;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:10px;z-index:3}
+.gb{position:absolute;top:50%;height:18px;margin-top:-9px;border-radius:5px;z-index:1;transition:transform .12s,box-shadow .12s}
+.gb:hover,.gb:focus-visible{transform:scaleY(1.2);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.gb.armone{background:repeating-linear-gradient(135deg,var(--c) 0 3px,var(--cbg) 3px 7px)!important;outline:1.5px solid var(--c);outline-offset:-1.5px}
+.gb.cl::before{content:"‹";position:absolute;left:4px;top:-1px;color:#fff;font-weight:800;font-size:13px}
+.gb.cr::after{content:"›";position:absolute;right:4px;top:-1px;color:#fff;font-weight:800;font-size:13px}
+.gd{position:absolute;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;transform:rotate(45deg);border-radius:2px;z-index:2;transition:transform .12s}
+.gd:hover,.gd:focus-visible{transform:rotate(45deg) scale(1.3)}
+.gd.armone{background:#fff!important;outline:2.5px solid var(--c);outline-offset:-2.5px}
+.gd.big{width:19px;height:19px;margin:-9.5px 0 0 -9.5px;box-shadow:0 0 0 4px var(--orange-bg)}
+.hint{font-size:12px;color:var(--muted);margin-top:10px}
+
+/* Panel */
+.scrim{position:fixed;inset:0;background:rgba(17,17,17,.28);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--bg);z-index:41;transform:translateX(102%);transition:transform .25s ease;box-shadow:-12px 0 40px rgba(0,0,0,.12);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.panel.on{transform:none}
+.p-top{display:flex;justify-content:space-between;align-items:center;padding:22px 24px 0}
+.p-close{width:34px;height:34px;border-radius:50%;background:var(--surface);font-size:18px;line-height:1;text-align:center}
+.p-body{padding:16px 24px 32px;overflow-y:auto;display:grid;gap:16px;align-content:start}
+.p-body h3{font-size:26px;font-weight:800;letter-spacing:-.025em;line-height:1.1}
+.p-facts{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.p-facts div{background:var(--bg);padding:13px 15px}
+.p-facts label{display:block;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.p-facts span{font-size:14px;font-weight:600;line-height:1.35}
+.p-body .c-detail{padding:0}
+@media (max-width:768px){
+  .gv{--W:calc(100vw - 36px)}
+  .g-row{grid-template-columns:170px 1fr}
+  .gantt{min-width:820px}
+}
+
+@media (max-width:768px){
+  .blob-tr,.blob-br{display:none}
+  .wrapper{padding:0 18px 80px}
+  .bar{margin:0 -18px;padding:10px 18px}
+  .site-header{flex-direction:column;align-items:flex-start;padding:24px 0 20px}
+  .doc-tag{text-align:left}
+  .cover{padding:52px 0 44px}
+  .subtitle{font-size:16px}
+  .cover-meta{flex-direction:column;gap:16px}
+  .phases{grid-template-columns:1fr}
+  .week{grid-template-columns:1fr;padding-top:22px}
+  .week::before{left:0;margin-left:6px}
+  .wk-h{text-align:left;padding-left:30px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:10px}
+  .wk-h span{margin-top:0}
+  .wk-h .fest{margin-top:0}
+  .wk-body{padding-left:30px}
+  .wk-body::before{left:0;top:-30px}
+  .c-top{grid-template-columns:48px 1fr auto;gap:10px;padding:12px}
+  .c-date b{font-size:21px}
+  .c-detail{padding:0 14px 16px 14px}
+  .cycle{grid-template-columns:1fr 1fr}
+  .alcance-full{padding:22px 18px}
+  .slp-box{padding:26px 22px}
+  .site-footer{flex-direction:column;align-items:flex-start}
+  .site-footer p{text-align:left}
+}
+@media (max-width:460px){.cycle{grid-template-columns:1fr}.seg button{padding:7px 9px;font-size:12.5px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="blob-container blob-tr" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="blob-container blob-br" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div></div>
+
+<div class="wrapper">
+  <header class="site-header">
+    <div class="logo" aria-label="BLÜR Collective"><b>BLÜR</b><span>Collective</span></div>
+    <div class="doc-tag">Cronograma de trabajo · Armoné By Silvia Fonnegra · 2026</div>
+  </header>
+
+  <section class="cover">
+    <div class="eyebrow">02 · Cronograma de trabajo</div>
+    <h1>Del arranque a la feria. <em>8 semanas, día por día.</em></h1>
+    <p class="subtitle">Lo que tiene que pasar, y cuándo, para que Armoné llegue a la feria del 20 de noviembre con redes publicando y la pauta encendida ese día.</p>
+    <div class="cover-meta">
+      <div><label>Inicio</label><span>Lunes 28 sep 2026</span></div>
+      <div><label>Lanzamiento</label><span>Feria · Viernes 20 nov</span></div>
+      <div><label>Pauta activa</label><span>Desde el 20 nov</span></div>
+      <div><label>Aprobaciones</label><span>Máximo 3 días hábiles</span></div>
+    </div>
+    <div class="cover-actions"><div class="countdown" id="countdown"></div><button class="goto" id="gotoNow">Ir a esta semana ↓</button></div>
+
+    <div class="phases">
+      <button class="ph" data-jump="e1"><span class="phase-tag tag-orange">Semanas 1 a 3</span><h3>Brief y estrategia</h3><p>28 sep a 16 oct · brief y presentación de estrategia, KV y pre parrilla el 14 oct</p><span class="go">Ver semanas →</span></button>
+      <button class="ph" data-jump="e2"><span class="phase-tag tag-blue">Semanas 4 a 6</span><h3>Aprobación y producción</h3><p>19 oct a 6 nov · accesos, perfiles, grabación y edición</p><span class="go">Ver semanas →</span></button>
+      <button class="ph" data-jump="e3"><span class="phase-tag tag-green">Semanas 7 y 8</span><h3>Expectativa y lanzamiento</h3><p>9 a 20 nov · publicación, pauta lista y feria</p><span class="go">Ver semanas →</span></button>
+    </div>
+  </section>
+
+  <div class="bar">
+    <div class="bar-l"><div class="seg view" id="segView"><button data-v="tl" aria-pressed="true">Línea de tiempo</button><button data-v="gantt" aria-pressed="false">Gantt</button></div>
+    <div class="seg" id="segWho"><button data-w="all" aria-pressed="true">Todo</button><button data-w="armone" aria-pressed="false">Lo de Armoné</button></div></div>
+  </div>
+
+  <div class="tl" id="tl"></div>
+  <div class="gv" id="gv" hidden>
+    <div class="gv-head"><span class="phase-tag" id="gvTag"></span><h2 id="gvTitle"></h2><p>Cada barra es una tarea y cada rombo un hito. Toca cualquiera para ver el detalle. Las barras rayadas son de Armoné.</p></div>
+    <div class="legend" id="legend"></div>
+    <div class="g-shell"><div class="g-scroll"><div class="gantt" id="gantt"></div></div></div>
+    <p class="hint">En celular, desliza la tabla hacia los lados. Toca el nombre de un frente para abrirlo o cerrarlo.</p>
+  </div>
+
+  <section class="section">
+    <div class="slp-box" style="margin-top:0">
+      <div class="slp-label">Después del 20 de noviembre</div>
+      <h3>La pauta queda encendida y arranca el ciclo mensual.</h3>
+      <p>Desde la feria la marca queda publicando y con pauta activa en Meta, Google y TikTok. El cronograma de diciembre en adelante lo entregamos junto con la <strong>parrilla de diciembre</strong>, con grabación, edición, aprobación y reporte cada mes.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">De parte de Armoné</div>
+    <h2 class="section-title">Lo que necesitamos <em>para cumplir</em></h2>
+    <p class="section-intro">Cada fecha depende de estos insumos. Si alguno se demora, lo que depende de él se corre el mismo número de días.</p>
+    <div class="alcance-full"><div class="alcance-items">
+      <div class="alcance-item"><span class="dot"></span>Brief diligenciado con info de la feria <small>1 oct</small></div>
+      <div class="alcance-item"><span class="dot"></span>Aprobación de estrategia, KV y pre parrilla <small>19 oct</small></div>
+      <div class="alcance-item"><span class="dot"></span>Accesos a Shopify y métodos de pago <small>20 oct</small></div>
+      <div class="alcance-item"><span class="dot"></span>Sesión de fotos <small>26 oct</small></div>
+      <div class="alcance-item"><span class="dot"></span>Fotos finales <small>2 nov</small></div>
+      <div class="alcance-item"><span class="dot"></span>Aprobación de contenido <small>9 nov</small></div>
+      <div class="alcance-item"><span class="dot"></span>Aprobación de pauta y presupuesto <small>19 nov</small></div>
+    </div></div>
+    <div class="slp-box">
+      <div class="slp-label">Regla de aprobación</div>
+      <h3>3 días hábiles para aprobar. Sin respuesta, seguimos.</h3>
+      <p>Cada entrega de BLÜR tiene un máximo de <strong>3 días hábiles</strong> de revisión. Así protegemos la fecha de la feria. Los festivos no cuentan: <strong>12 oct, 2 nov y 16 nov.</strong></p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="logo"><b>BLÜR</b><span>Collective</span></div>
+    <p>BLÜR Collective · Cronograma de trabajo 2026<br>Armoné By Silvia Fonnegra</p>
+  </footer>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" aria-hidden="true" role="dialog" aria-label="Detalle de la tarea">
+  <div class="p-top"><span class="phase-tag" id="pTag" style="margin:0"></span><button class="p-close" id="pClose" aria-label="Cerrar">×</button></div>
+  <div class="p-body" id="pBody"></div>
+</aside>
+
+<script>
+(function(){
+var MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+var MESL=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+var DIAC=["Do","Lu","Ma","Mi","Ju","Vi","Sá"];
+var HOL=["2026-10-12","2026-11-02","2026-11-16","2026-12-08","2026-12-25","2027-01-01","2027-01-11","2027-03-22","2027-03-25","2027-03-26"];
+var DAY=864e5;
+function D(s){var p=s.split("-");return Date.UTC(+p[0],+p[1]-1,+p[2]);}
+function iso(t){return new Date(t).toISOString().slice(0,10);}
+function f(s){var d=new Date(D(s));return d.getUTCDate()+" "+MES[d.getUTCMonth()];}
+function fd(s){var d=new Date(D(s));return DIAC[d.getUTCDay()]+" "+d.getUTCDate()+" "+MES[d.getUTCMonth()];}
+function rng(s,e){return (!e||e===s)?f(s):f(s)+" a "+f(e);}
+function bizDays(s,e){var n=0;for(var t=D(s);t<=D(e);t+=DAY){var w=new Date(t).getUTCDay();if(w>0&&w<6&&HOL.indexOf(iso(t))<0)n++;}return n;}
+var FR={
+  arranque:{n:"Arranque y accesos",c:"#111111",bg:"#F1F1F1"},
+  estrategia:{n:"Estrategia",c:"#E8520A",bg:"#FFF0EA"},
+  kv:{n:"Perfiles",c:"#6C44E0",bg:"#F3EFFF"},
+  contenido:{n:"Contenido",c:"#3B72FF",bg:"#EEF3FF"},
+  pauta:{n:"Pauta y medición",c:"#1DBF73",bg:"#E8FBF3"}
+};
+var WHO={blur:"BLÜR",armone:"Armoné",ambos:"BLÜR y Armoné"};
+var PER={
+  lanz:{s:"2026-09-28",e:"2026-11-29",n:"Fundación y lanzamiento",tag:"tag-orange"},
+  act:{s:"2026-11-23",e:"2027-01-31",n:"Activación y optimización",tag:"tag-blue"},
+  esc:{s:"2027-01-25",e:"2027-03-28",n:"Escala y performance",tag:"tag-green"},
+  all:{s:"2026-09-28",e:"2027-03-28",n:"6 meses"}
+};
+
+var T=[
+ {id:"kick",f:"arranque",who:"ambos",s:"2026-09-28",m:1,n:"Arranque y envío del brief",d:"Reunión de inicio con Armoné. Ese mismo día BLÜR envía el brief para diligenciar: marca, producto, público, competencia, precios y toda la información de la feria.",ent:"Brief enviado a Armoné."},
+ {id:"brief",f:"arranque",who:"armone",s:"2026-09-29",e:"2026-10-01",n:"Brief diligenciado",d:"Armoné devuelve el brief completo, con la información de la feria (fecha, lugar, stand y dinámica). Máximo 3 días hábiles: a más tardar el jueves 1 de octubre.",ent:"Brief diligenciado.",dep:["kick"]},
+ {id:"est",f:"estrategia",who:"blur",s:"2026-10-02",e:"2026-10-13",n:"Estrategia, KV y pre parrilla",d:"Con el brief construimos todo en un solo paquete: posicionamiento, pilares de contenido, funnel y plan de pauta de lanzamiento; la dirección gráfica (KV) de Armoné en redes; y una pre parrilla con la idea creativa de la expectativa y el lanzamiento.",ent:"Estrategia, KV y pre parrilla.",dep:["brief"]},
+ {id:"estp",f:"estrategia",who:"blur",s:"2026-10-14",m:1,n:"Presentación de estrategia, KV y pre parrilla",d:"Presentamos a Silvia y su equipo la estrategia, el KV y la idea de pre parrilla en una sola reunión.",ent:"Presentación completa.",dep:["est"]},
+ {id:"esta",f:"estrategia",who:"armone",s:"2026-10-15",e:"2026-10-19",n:"Aprobación",d:"Armoné envía comentarios consolidados en un solo mensaje. Máximo 3 días hábiles.",ent:"Aprobación o comentarios.",dep:["estp"]},
+ {id:"estf",f:"estrategia",who:"blur",s:"2026-10-20",e:"2026-10-21",n:"Ajustes y versión final",d:"Incorporamos los comentarios y entregamos la versión final de estrategia, KV con plantillas y pre parrilla.",ent:"Versión final.",dep:["esta"]},
+ {id:"acc",f:"arranque",who:"armone",s:"2026-10-15",e:"2026-10-20",n:"Accesos a Shopify y métodos de pago",d:"Armoné comparte el acceso de colaborador a Shopify y tiene listo el método de pago para las cuentas publicitarias.",ent:"Accesos compartidos.",dep:["estp"]},
+ {id:"cuentas",f:"pauta",who:"blur",s:"2026-10-21",e:"2026-10-23",n:"Cuentas publicitarias",d:"Creamos las cuentas de Meta Ads, Google Ads y TikTok Ads a nombre de Armoné y se vinculan los métodos de pago. Las cuentas siempre son de la marca.",ent:"Cuentas listas.",dep:["acc"]},
+ {id:"pix",f:"pauta",who:"blur",s:"2026-10-21",e:"2026-10-27",n:"Instalación de píxeles",d:"Píxel de Meta, píxel de TikTok y etiqueta de Google en Shopify con los eventos de compra.",ent:"Píxeles instalados.",dep:["acc"]},
+ {id:"perf",f:"kv",who:"blur",s:"2026-10-22",e:"2026-10-28",n:"Creación de perfiles de Instagram y TikTok",d:"Bio, foto, highlights y estética editorial con el KV aprobado.",ent:"Perfiles listos.",dep:["estf"]},
+ {id:"guion",f:"contenido",who:"blur",s:"2026-10-22",e:"2026-10-23",n:"Guiones y lista de tomas",d:"Bajamos la pre parrilla aprobada a guiones y lista de tomas para la grabación del lunes.",ent:"Guiones y lista de tomas.",dep:["estf"]},
+ {id:"grab",f:"contenido",who:"ambos",s:"2026-10-26",e:"2026-10-27",n:"Sesión de fotos y grabación",d:"Armoné hace su sesión de fotos de producto y BLÜR aprovecha la jornada para grabar el contenido.",ent:"Material en bruto.",dep:["guion"]},
+ {id:"edi",f:"contenido",who:"blur",s:"2026-10-28",e:"2026-11-04",n:"Edición y parrilla final",d:"Edición con subtítulos, música y copys, y la parrilla final con fechas de publicación. Se entrega el miércoles 4 de noviembre.",ent:"Contenido y parrilla final.",dep:["grab"]},
+ {id:"fotos",f:"contenido",who:"armone",s:"2026-11-02",m:1,n:"Entrega de fotos de producto",d:"Armoné entrega las fotos finales para carruseles, catálogo y anuncios.",ent:"Fotos finales.",dep:["grab"]},
+ {id:"conta",f:"contenido",who:"armone",s:"2026-11-05",e:"2026-11-09",n:"Aprobación de contenido",d:"Máximo 3 días hábiles. Tiene que quedar aprobado para publicar el 10 de noviembre.",ent:"Contenido aprobado.",dep:["edi"]},
+ {id:"pubx",f:"contenido",who:"blur",s:"2026-11-10",e:"2026-11-19",n:"Publicación de expectativa",d:"Diez días de expectativa en Instagram y TikTok hacia la feria.",ent:"Publicaciones en redes.",dep:["conta","perf"]},
+ {id:"cat",f:"pauta",who:"blur",s:"2026-11-05",e:"2026-11-11",n:"Catálogo de Shopify a Ads",d:"Conectamos el catálogo de productos a Meta y Google.",ent:"Catálogo conectado.",dep:["fotos","pix","cuentas"]},
+ {id:"camp",f:"pauta",who:"blur",s:"2026-11-10",e:"2026-11-13",n:"Pruebas de medición y campañas",d:"Compras de prueba para validar los eventos, estructura de campañas y anuncios. El viernes 13 presentamos plan de pauta y presupuesto. La inversión va directo a las cuentas de Armoné; la recomendación inicial es entre $800.000 y $1.500.000 COP al mes.",ent:"Plan de pauta y presupuesto.",dep:["conta","cat"]},
+ {id:"campa",f:"pauta",who:"armone",s:"2026-11-17",e:"2026-11-19",n:"Aprobación de pauta y presupuesto",d:"Máximo 3 días hábiles (el 16 de noviembre es festivo). Tiene que quedar aprobada para encender la pauta el 20.",ent:"Pauta aprobada.",dep:["camp"]},
+ {id:"lanz",f:"contenido",who:"ambos",s:"2026-11-20",m:1,big:1,n:"Lanzamiento en la feria y pauta activa",d:"Lanzamiento oficial de Armoné en la feria. BLÜR hace cobertura en tiempo real y ese mismo día se enciende la pauta en Meta, Google y TikTok.",ent:"Cobertura del día y campañas activas.",dep:["pubx","campa"]}
+];
+T.forEach(function(t){if(!t.e)t.e=t.s;});
+var BY={};T.forEach(function(t){BY[t.id]=t;});
+var WHOL={blur:"BLÜR",armone:"Armoné",ambos:"BLÜR y Armoné"};
+var FASES=[
+ {id:"e1",s:"2026-09-28",e:"2026-10-18",tag:"tag-orange",lab:"Semanas 1 a 3",n:"Brief",em:"y estrategia",intro:"Enviamos el brief, Armoné lo devuelve y construimos estrategia, KV y pre parrilla para presentarlos juntos el 14 de octubre."},
+ {id:"e2",s:"2026-10-19",e:"2026-11-08",tag:"tag-blue",lab:"Semanas 4 a 6",n:"Aprobación",em:"y producción",intro:"Aprobación, accesos y cuentas, perfiles de Instagram y TikTok, píxeles, sesión de fotos, grabación y edición."},
+ {id:"e3",s:"2026-11-09",e:"2026-11-22",tag:"tag-green",lab:"Semanas 7 y 8",n:"Expectativa",em:"y lanzamiento",intro:"Publicación de expectativa, catálogo y medición validados, pauta aprobada y todo encendido el día de la feria."}
+];
+var LONG=21;
+var TODAY=(function(){var n=new Date();return iso(Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()));})();
+var REF=TODAY<"2026-09-28"?"2026-09-28":TODAY;
+function monOf(s){var d=new Date(D(s)),wd=(d.getUTCDay()+6)%7;return iso(D(s)-wd*DAY);}
+var NOWMON=monOf(REF);
+var st={w:"all",open:{}};
+try{var sv=localStorage.getItem("armone-w3");if(sv)st.w=sv;}catch(e){}
+
+function pass(t){
+  if(st.w==="hitos")return !!t.m;
+  if(st.w==="armone")return t.who!=="blur";
+  if(st.w==="blur")return t.who!=="armone";
+  return true;
+}
+function isLong(t){return (D(t.e)-D(t.s))/DAY+1>LONG;}
+
+function detail(t){
+  var deps=(t.dep||[]).map(function(x){return BY[x];}).filter(Boolean);
+  var next=T.filter(function(o){return (o.dep||[]).indexOf(t.id)>-1;});
+  var h='<div class="c-detail"><div><h4>Qué incluye</h4><p>'+t.d+'</p></div>';
+  if(t.ent)h+='<div><h4>Entregable</h4><p>'+t.ent+'</p></div>';
+  if(deps.length)h+='<div><h4>Depende de</h4><div class="c-chips">'+deps.map(function(x){return '<button data-go="'+x.id+'">← '+x.n+' · '+rng(x.s,x.e)+'</button>';}).join("")+'</div></div>';
+  if(next.length)h+='<div><h4>Habilita</h4><div class="c-chips">'+next.map(function(x){return '<button data-go="'+x.id+'">→ '+x.n+' · '+rng(x.s,x.e)+'</button>';}).join("")+'</div></div>';
+  return h+'</div>';
+}
+function card(t){
+  var c=FR[t.f],cls="card"+(t.m?" hito":"")+(t.who==="armone"?" armone":"")+(t.big?" big":"")+(st.open[t.id]?" open":"");
+  var d=new Date(D(t.s));
+  var dateHtml='<small>'+DIAC[d.getUTCDay()]+'</small><b>'+d.getUTCDate()+'</b><i>'+MES[d.getUTCMonth()]+'</i>';
+  var range=t.m?"":(isLong(t)?'<div class="c-range">Desde el '+fd(t.s)+' hasta el '+f(t.e)+'</div>':(t.e!==t.s?'<div class="c-range">'+fd(t.s)+' a '+fd(t.e)+' · '+bizDays(t.s,t.e)+' días hábiles</div>':''));
+  if(t.m&&!t.big)range='<div class="c-range">Hito · '+fd(t.s)+'</div>';
+  if(t.big)range='<div class="c-range">'+fd(t.s)+'</div>';
+  var whoCls=t.who==="armone"?"c-who armone":"c-who";
+  var h='<div class="'+cls+'" id="c-'+t.id+'"><button class="c-top" data-tog="'+t.id+'" aria-expanded="'+(!!st.open[t.id])+'"><div class="c-date">'+dateHtml+'</div><div class="c-main"><div class="c-kicker"><span class="c-fr" style="color:'+(t.big?'var(--orange-light)':c.c)+'">'+(t.m?'◆ ':'')+c.n+'</span><span class="'+whoCls+'">'+WHOL[t.who]+'</span></div><div class="c-name">'+t.n+'</div>'+range+'</div><span class="c-chev" aria-hidden="true">▾</span></button>';
+  if(st.open[t.id])h+=detail(t);
+  return h+'</div>';
+}
+
+function render(){
+  var h="";
+  FASES.forEach(function(F){
+    h+='<div class="month" id="'+F.id+'"><div class="month-h"><span class="phase-tag '+F.tag+'">'+F.lab+'</span><h2>'+F.n+' <em>'+F.em+'</em></h2></div><p class="phase-intro">'+F.intro+'</p>';
+    var ong=T.filter(function(t){return isLong(t)&&t.s<=F.e&&t.e>=F.s&&t.s<F.s;});
+    if(ong.length&&st.w!=="hitos"&&st.w!=="armone")h+='<div class="ongoing">'+ong.map(function(t){return '<span><i style="background:'+FR[t.f].c+'"></i>Sigue activo: '+t.n+' (hasta '+f(t.e)+')</span>';}).join("")+'</div>';
+    for(var m=D(F.s);m<=D(F.e);m+=7*DAY){
+      var mon=iso(m),sun=iso(m+6*DAY);
+      var items=T.filter(function(t){return t.s>=mon&&t.s<=sun&&pass(t);}).sort(function(a,b){if(a.s!==b.s)return a.s<b.s?-1:1;function r(t){return t.big?0:t.m?1:isLong(t)?3:2;}var d=r(a)-r(b);return d||(a.e<b.e?-1:1);});
+      var now=mon===NOWMON;
+      if(!items.length&&!now)continue;
+      var fest=HOL.filter(function(x){return x>=mon&&x<=sun;});
+      var wn=Math.round((m-D("2026-09-28"))/(7*DAY))+1;
+      h+='<div class="week'+(now?' now':'')+'" id="w-'+mon+'"><div class="wk-h"><b>Semana '+wn+'</b><span>'+f(mon)+' a '+f(sun)+'</span>'+(fest.length?'<span class="fest">Festivo '+fest.map(f).join(", ")+'</span>':'')+'</div><div class="wk-body">';
+      if(now)h+='<span class="now-flag">'+(TODAY<"2026-09-28"?'Arrancamos aquí':'Esta semana')+'</span>';
+      h+=items.length?items.map(card).join(""):'<div class="empty">Sin tareas con este filtro.</div>';
+      h+='</div></div>';
+    }
+    h+='</div>';
+  });
+  document.getElementById("tl").innerHTML=h;
+  document.querySelectorAll("#segWho button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.w===st.w?"true":"false");});
+}
+
+function scrollToEl(el){if(!el)return;var y=el.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top:y,behavior:"smooth"});}
+
+
+var GP={all:{s:"2026-09-28",e:"2026-11-22",tag:"tag-orange",lab:"28 sep a 20 nov",n:"Del arranque <em>a la feria</em>"},e1:{s:"2026-09-28",e:"2026-10-18",tag:"tag-orange",lab:"Semanas 1 a 3",n:"Brief <em>y estrategia</em>"},e2:{s:"2026-10-19",e:"2026-11-08",tag:"tag-blue",lab:"Semanas 4 a 6",n:"Aprobación <em>y producción</em>"},e3:{s:"2026-11-09",e:"2026-11-22",tag:"tag-green",lab:"Semanas 7 y 8",n:"Expectativa <em>y lanzamiento</em>"}};
+st.view="tl";st.per="all";st.closed={};
+try{var sv2=JSON.parse(localStorage.getItem("armone-v2")||"null");if(sv2){st.view=sv2.v||"tl";st.per=GP[sv2.p]?sv2.p:"all";}}catch(e){}
+function saveV(){try{localStorage.setItem("armone-v2",JSON.stringify({v:st.view,p:st.per}));}catch(e){}}
+(function(){var h="";Object.keys(FR).forEach(function(k){h+='<span><i class="lg-bar" style="background:'+FR[k].c+'"></i>'+FR[k].n+'</span>';});h+='<span><i class="lg-bar lg-armone"></i>Tarea de Armoné</span><span><i class="lg-dia"></i>Hito</span><span><i class="lg-hol"></i>Festivo</span>';document.getElementById("legend").innerHTML=h;})();
+
+function renderGantt(){
+  var P=GP[st.per],t0=D(P.s),n=Math.round((D(P.e)-t0)/DAY)+1;
+  function x(s){return (D(s)-t0)/DAY/n*100;}
+  var tg=document.getElementById("gvTag");tg.className="phase-tag "+P.tag;tg.textContent=P.lab;tg.hidden=!P.tag;
+  document.getElementById("gvTitle").innerHTML=P.n;
+  var long=n>80,head='<div class="g-row g-head"><div class="g-lab">Actividad</div><div class="g-trk">',bg="";
+  for(var j=0;j<n;j++){
+    var dt=new Date(t0+j*DAY),is=iso(t0+j*DAY),wd=dt.getUTCDay(),L=j/n*100,W=100/n;
+    if(HOL.indexOf(is)>-1)bg+='<div class="bgc hol" style="left:'+L+'%;width:'+W+'%"></div>';
+    else if(!long&&(wd===0||wd===6))bg+='<div class="bgc we" style="left:'+L+'%;width:'+W+'%"></div>';
+    if(dt.getUTCDate()===1){bg+='<div class="bgc ml" style="left:'+L+'%"></div>';head+='<div class="tick m" style="left:'+L+'%">'+MESL[dt.getUTCMonth()]+'</div>';}
+    else if(j===0){var dim=new Date(Date.UTC(dt.getUTCFullYear(),dt.getUTCMonth()+1,0)).getUTCDate();if(dim-dt.getUTCDate()>=7)head+='<div class="tick m" style="left:0">'+MESL[dt.getUTCMonth()]+'</div>';}
+    if(wd===1){bg+='<div class="bgc wl" style="left:'+L+'%"></div>';head+='<div class="tick" style="left:'+L+'%">'+(long?dt.getUTCDate():f(is))+'</div>';}
+  }
+  if(TODAY>=P.s&&TODAY<=P.e){var tl=x(TODAY)+50/n;bg+='<div class="bgc today" style="left:'+tl+'%"></div>';head+='<div class="today-tag" style="left:'+tl+'%">Hoy</div>';}
+  var h=head+'</div></div>';
+  var vis=T.filter(function(t){return t.e>=P.s&&t.s<=P.e&&pass(t);}).sort(function(a,b){return a.s<b.s?-1:a.s>b.s?1:(a.m?-1:1);});
+  Object.keys(FR).forEach(function(k){
+    var rows=vis.filter(function(t){return t.f===k;});if(!rows.length)return;
+    var closed=st.closed[k];
+    h+='<div class="g-row g-group" data-closed="'+(closed?1:0)+'"><button class="g-lab" data-grp="'+k+'" aria-expanded="'+(!closed)+'"><i class="lg-bar" style="background:'+FR[k].c+'"></i><span class="gl-n">'+FR[k].n+'</span><span class="cnt">'+rows.length+'</span><span class="chev">▾</span></button><div class="g-trk">'+bg+'</div></div>';
+    if(closed)return;
+    rows.forEach(function(t){
+      var c=FR[t.f],sty='--c:'+c.c+';--cbg:'+c.bg+';background:'+c.c+';',lab=t.n+", "+rng(t.s,t.e);
+      h+='<div class="g-row"><button class="g-lab" data-pan="'+t.id+'"><span class="gl-n">'+t.n+'</span><span class="gl-d"><i>'+WHOL[t.who]+'</i> · '+rng(t.s,t.e)+'</span></button><div class="g-trk">'+bg;
+      if(t.m)h+='<button class="gd'+(t.who==="armone"?" armone":"")+(t.big?" big":"")+'" data-pan="'+t.id+'" style="'+sty+'left:'+(x(t.s)+50/n)+'%" aria-label="'+lab+'"></button>';
+      else{var s1=t.s<P.s?P.s:t.s,e1=t.e>P.e?P.e:t.e,w=(Math.round((D(e1)-D(s1))/DAY)+1)/n*100;
+        h+='<button class="gb'+(t.who==="armone"?" armone":"")+(t.s<P.s?" cl":"")+(t.e>P.e?" cr":"")+'" data-pan="'+t.id+'" style="'+sty+'left:'+x(s1)+'%;width:'+w+'%" aria-label="'+lab+'"></button>';}
+      h+='</div></div>';
+    });
+  });
+  var g=document.getElementById("gantt");g.style.minWidth=long?"1400px":"";g.innerHTML=h;
+}
+
+function applyView(){
+  var gv=st.view==="gantt";
+  document.getElementById("tl").hidden=gv;document.getElementById("gv").hidden=!gv;
+  document.querySelectorAll("#segView button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.v===st.view?"true":"false");});
+  if(gv){renderGantt();document.querySelectorAll("#jump button").forEach(function(b){b.classList.toggle("on",b.dataset.jump===st.per);});}
+  saveV();
+}
+
+var panel=document.getElementById("panel"),scrim=document.getElementById("scrim"),lastFocus=null;
+function openP(id){
+  var t=BY[id];if(!t)return;
+  if(!panel.classList.contains("on"))lastFocus=document.activeElement;
+  var c=FR[t.f],tg=document.getElementById("pTag");tg.textContent=c.n;tg.style.background=c.bg;tg.style.color=c.c;
+  var cuando=t.m||t.e===t.s?fd(t.s):fd(t.s)+" a "+fd(t.e);
+  var dur=t.m?"Hito":isLong(t)?"Hasta el "+f(t.e):bizDays(t.s,t.e)+" días hábiles";
+  var fase=t.s<"2026-10-19"?"Brief y estrategia":t.s<"2026-11-09"?"Aprobación y producción":"Expectativa y lanzamiento";
+  document.getElementById("pBody").innerHTML='<h3>'+t.n+'</h3><div class="p-facts"><div><label>Fecha</label><span>'+cuando+'</span></div><div><label>Duración</label><span>'+dur+'</span></div><div><label>Responsable</label><span>'+WHOL[t.who]+'</span></div><div><label>Fase</label><span>'+fase+'</span></div></div>'+detail(t);
+  document.getElementById("pBody").scrollTop=0;
+  panel.classList.add("on");scrim.classList.add("on");panel.setAttribute("aria-hidden","false");document.getElementById("pClose").focus();
+}
+function closeP(){panel.classList.remove("on");scrim.classList.remove("on");panel.setAttribute("aria-hidden","true");if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+document.getElementById("pClose").addEventListener("click",closeP);
+scrim.addEventListener("click",closeP);
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&panel.classList.contains("on"))closeP();});
+document.addEventListener("click",function(e){
+  var pn=e.target.closest("[data-pan]");if(pn){openP(pn.dataset.pan);return;}
+  var vw=e.target.closest("#segView button");if(vw){st.view=vw.dataset.v;applyView();return;}
+  var gp=e.target.closest("[data-grp]");if(gp){st.closed[gp.dataset.grp]=!st.closed[gp.dataset.grp];renderGantt();return;}
+  var tg=e.target.closest("[data-tog]");
+  if(tg){var id=tg.dataset.tog;st.open[id]=!st.open[id];var el=document.getElementById("c-"+id);var tmp=document.createElement("div");tmp.innerHTML=card(BY[id]);el.replaceWith(tmp.firstChild);document.querySelector('#c-'+id+' .c-top').focus();return;}
+  var go=e.target.closest("[data-go]");
+  if(go&&(st.view==="gantt"||panel.contains(go))){openP(go.dataset.go);return;}
+  if(go){var t=BY[go.dataset.go];if(!pass(t)){st.w="all";try{localStorage.setItem("armone-w3","all");}catch(x){}}st.open[t.id]=true;render();var el2=document.getElementById("c-"+t.id);scrollToEl(el2);el2.classList.add("flash");return;}
+  var w=e.target.closest("#segWho button");
+  if(w){st.w=w.dataset.w;try{localStorage.setItem("armone-w3",st.w);}catch(x){}render();if(st.view==="gantt")renderGantt();return;}
+  var j=e.target.closest("[data-jump]");
+  if(j){if(j.closest(".phases")&&st.view==="gantt"){st.per=j.dataset.jump;applyView();scrollToEl(document.getElementById("gv"));return;}if(st.view==="gantt"&&j.closest("#jump")){st.per=j.dataset.jump;applyView();return;}scrollToEl(document.getElementById(j.dataset.jump));return;}
+  if(e.target.closest("#gotoNow")){if(st.view==="gantt"){st.view="tl";applyView();}scrollToEl(document.getElementById("w-"+NOWMON));}
+});
+
+var cd=Math.round((D("2026-11-20")-D(TODAY))/DAY),el=document.getElementById("countdown");
+if(cd>0)el.innerHTML='<b>'+cd+'</b> días para el lanzamiento en la feria';
+else if(cd===0)el.innerHTML='<b>Hoy</b> es el lanzamiento en la feria';
+else el.hidden=true;
+if(TODAY>"2026-11-22")document.getElementById("gotoNow").hidden=true;
+
+// Resaltar fase activa en la barra
+var jb=document.querySelectorAll("#jump button");
+window.addEventListener("scroll",function(){
+  if(st.view==="gantt")return;
+  var cur=null;FASES.forEach(function(F){var s=document.getElementById(F.id);if(s&&s.getBoundingClientRect().top<140)cur=F.id;});
+  jb.forEach(function(b){b.classList.toggle("on",b.dataset.jump===cur);});
+},{passive:true});
+
+render();applyView();
+})();
+</script>
+
+</body>
+</html>
